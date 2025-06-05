@@ -1,0 +1,10 @@
+My approach was simple: learn the syntax of Docker, then just search how to make individual images of the respective containers.
+
+I faced some challenges. The most prominent of them all was that the Backend was not running properly.
+Also, I don't know Rust, so for days I would just do random things - 
+change compiler versions and make shell scripts containing all the commands required to run the backend normally. 
+I'd paste the errors into AI and it would just say "check the logs" 😭😭.
+
+Then I just simply searched on google "why is my backend not running?" There was a list of suggestion one 
+the backend was only listening inside the container. So I changed that in main.rs, and It also said to change "localhost" to "backend" in the frontend, so I changed the proxy in 
+package-lock.json. Finally, the Error 500 was gone and the app started working.

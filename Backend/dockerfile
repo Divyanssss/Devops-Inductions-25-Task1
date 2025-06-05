@@ -1,0 +1,24 @@
+FROM rust:1.70
+
+RUN apt-get update && apt-get install -y libpq-dev pkg-config
+
+WORKDIR /app
+
+# Install specific version of diesel_cli compatible with Rust 1.76
+RUN cargo install diesel_cli@2.1.1 --no-default-features --features postgres --locked --verbose
+
+COPY Cargo.toml Cargo.lock ./
+COPY diesel.toml ./
+COPY .env.example .env.example
+
+RUN cargo build --release || true
+
+COPY src ./src
+COPY migrations ./migrations
+
+RUN cargo build --release
+
+EXPOSE 8080
+
+# Run migrations at container start and then run server
+CMD diesel migration run && ./target/release/login-app-backend
