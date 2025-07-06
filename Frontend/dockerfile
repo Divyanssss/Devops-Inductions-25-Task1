@@ -2,26 +2,13 @@ FROM node:18.0.0
 
 WORKDIR /usr/src/app
 
-# Install app dependencies
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
 
-# Bundle app source
 COPY . .
 
-# Set environment variables
-ENV REACT_APP_API_URL=http://backend:8080
-ENV WDS_SOCKET_PORT=0
 
 EXPOSE 3000
 
-# Add healthcheck
-HEALTHCHECK --interval=10s --timeout=3s \
-    CMD wget -qO- http://localhost:3000 || exit 1
-
 CMD ["npm", "start"]
-# Use the following command to build the image
-# docker build -t frontend .
-# Use the following command to run the container
-# docker run -p 3000:3000 frontend

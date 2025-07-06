@@ -1,0 +1,12 @@
+target/
+*.rs.bk
+*.log
+*.env
+*.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+node_modules/
+npm-debug.log
+dist/
