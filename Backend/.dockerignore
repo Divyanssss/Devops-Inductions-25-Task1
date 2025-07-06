@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 target/
 *.rs.bk
 *.log
@@ -10,3 +11,6 @@ README.md
 node_modules/
 npm-debug.log
 dist/
+=======
+.env.example
+>>>>>>> 102f3c1296fed4fba19b3cfd54aae6182a99f5a1
