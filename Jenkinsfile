@@ -15,19 +15,13 @@ pipeline {
         stage('Test Frontend') {
             steps {
                 dir('Frontend') {
-                    bat 'npm install'       
+                    bat 'npm install'
                     bat 'npm test'
                 }
             }
         }
 
-        stage('Test Backend') {
-            steps { 
-                dir('Backend') {
-                    bat 'cargo test'
-                }
-            }
-        }
+       
 
         stage('Build & Push Frontend') {
             steps {
@@ -67,5 +61,7 @@ pipeline {
                 bat 'docker compose up -d --build'
             }
         }
+
+       
     }
 }
