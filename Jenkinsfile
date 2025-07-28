@@ -17,8 +17,8 @@ pipeline {
         stage('Test Frontend') {
             steps {
                 dir('Frontend') {
-                    sh 'npm install'
-                    sh 'npm test'
+                    bat 'npm install'
+                    bat 'npm test'
                 }
             }
         }
@@ -26,9 +26,9 @@ pipeline {
         stage('Build & Push Frontend') {
             steps {
                 dir('Frontend') {
-                    sh 'docker build -t $DOCKERHUB_USER/devops-inductions-25-task1-frontend .'
-                    sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
-                    sh 'docker push $DOCKERHUB_USER/devops-inductions-25-task1-frontend'
+                    bat 'docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-frontend .'
+                    bat 'echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin'
+                    bat 'docker push %DOCKERHUB_USER%/devops-inductions-25-task1-frontend'
                 }
             }
         }
@@ -36,17 +36,17 @@ pipeline {
         stage('Build & Push Backend') {
             steps {
                 dir('Backend') {
-                    sh 'docker build -t $DOCKERHUB_USER/devops-inductions-25-task1-backend .'
-                    sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
-                    sh 'docker push $DOCKERHUB_USER/devops-inductions-25-task1-backend'
+                    bat 'docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-backend .'
+                    bat 'echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin'
+                    bat 'docker push %DOCKERHUB_USER%/devops-inductions-25-task1-backend'
                 }
             }
         }
 
         stage('Docker Compose') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d --build'
+                bat 'docker compose down || true'
+                bat 'docker compose up -d --build'
             }
         }
     }
