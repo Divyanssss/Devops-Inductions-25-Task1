@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = "divyanshjoshi"
-        DOCKERHUB_PAT  = credentials('dockerpass')
     }
 
     stages {
@@ -16,28 +15,48 @@ pipeline {
         stage('Test Frontend') {
             steps {
                 dir('Frontend') {
-                    bat 'npm install'
+                    bat 'npm install'       
                     bat 'npm test'
+                }
+            }
+        }
+
+        stage('Test Backend') {
+            steps { 
+                dir('Backend') {
+                    bat 'cargo test'
                 }
             }
         }
 
         stage('Build & Push Frontend') {
             steps {
-                dir('Frontend') {
-                    bat "docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-frontend ."
-                    bat "echo %DOCKERHUB_USER%:%DOCKERHUB_PAT% | docker login --username %DOCKERHUB_USER% --password-stdin"
-                    bat "docker push %DOCKERHUB_USER%/devops-inductions-25-task1-frontend"
+                script {
+                    dir('Frontend') {
+                        bat "docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-frontend ."
+                        
+                        withCredentials([string(credentialsId: 'dockerpass', variable: 'DOCKER_PAT')]) {
+                            bat 'echo %DOCKER_PAT% | docker login -u %DOCKERHUB_USER% --password-stdin'
+                        }
+                        
+                        bat "docker push %DOCKERHUB_USER%/devops-inductions-25-task1-frontend"
+                    }
                 }
             }
         }
 
         stage('Build & Push Backend') {
             steps {
-                dir('Backend') {
-                    bat "docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-backend ."
-                    bat "echo %DOCKERHUB_USER%:%DOCKERHUB_PAT% | docker login --username %DOCKERHUB_USER% --password-stdin"
-                    bat "docker push %DOCKERHUB_USER%/devops-inductions-25-task1-backend"
+                script {
+                    dir('Backend') {
+                        bat "docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-backend ."
+                        
+                        withCredentials([string(credentialsId: 'dockerpass', variable: 'DOCKER_PAT')]) {
+                            bat 'echo %DOCKER_PAT% | docker login -u %DOCKERHUB_USER% --password-stdin'
+                        }
+                        
+                        bat "docker push %DOCKERHUB_USER%/devops-inductions-25-task1-backend"
+                    }
                 }
             }
         }
