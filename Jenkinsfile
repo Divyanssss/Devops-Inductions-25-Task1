@@ -1,17 +1,10 @@
 pipeline {
     agent any
 
-    environment {
-       DOCKERHUB_CREDS = credentials('dockerhub-creds')
-       DOCKERHUB_USER = DOCKERHUB_CREDS.username
-       DOCKERHUB_PASS = DOCKERHUB_CREDS.password
-    }
-
     stages {
         stage('get code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Divyanssss/Devops-Inductions-25-Task1.git'
-
             }
         }
 
@@ -27,9 +20,11 @@ pipeline {
         stage('Build & Push Frontend') {
             steps {
                 dir('Frontend') {
-                    bat 'docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-frontend .'
-                    bat 'echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin'
-                    bat 'docker push %DOCKERHUB_USER%/devops-inductions-25-task1-frontend'
+                    withCredentials([usernamePassword(credentialsId: '836e34ec-6d9e-463e-b8c1-fc16ee6f8bc9', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat 'docker build -t %DOCKER_USER%/devops-inductions-25-task1-frontend .'
+                        bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                        bat 'docker push %DOCKER_USER%/devops-inductions-25-task1-frontend'
+                    }
                 }
             }
         }
@@ -37,9 +32,11 @@ pipeline {
         stage('Build & Push Backend') {
             steps {
                 dir('Backend') {
-                    bat 'docker build -t %DOCKERHUB_USER%/devops-inductions-25-task1-backend .'
-                    bat 'echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin'
-                    bat 'docker push %DOCKERHUB_USER%/devops-inductions-25-task1-backend'
+                    withCredentials([usernamePassword(credentialsId: '836e34ec-6d9e-463e-b8c1-fc16ee6f8bc9', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat 'docker build -t %DOCKER_USER%/devops-inductions-25-task1-backend .'
+                        bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                        bat 'docker push %DOCKER_USER%/devops-inductions-25-task1-backend'
+                    }
                 }
             }
         }
