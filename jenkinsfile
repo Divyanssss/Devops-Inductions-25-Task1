@@ -9,7 +9,8 @@ pipeline {
     stages {
         stage('get code') {
             steps {
-                git 'https://github.com/Divyanssss/Devops-Inductions-25-Task1.git'
+                git branch: 'main', url: 'https://github.com/Divyanssss/Devops-Inductions-25-Task1.git'
+
             }
         }
 
